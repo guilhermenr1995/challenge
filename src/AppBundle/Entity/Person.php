@@ -13,7 +13,6 @@ class Person
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $personid;
 
@@ -35,7 +34,7 @@ class Person
     /**
      * Get the value of personid
      */ 
-    public function getPersonid()
+    public function getPersonId()
     {
         return $this->personid;
     }
@@ -45,7 +44,7 @@ class Person
      *
      * @return  self
      */ 
-    public function setPersonid($personid)
+    public function setPersonId($personid)
     {
         $this->personid = $personid;
 
@@ -55,7 +54,7 @@ class Person
     /**
      * Get the value of personname
      */ 
-    public function getPersonname()
+    public function getPersonName()
     {
         return $this->personname;
     }
@@ -65,7 +64,7 @@ class Person
      *
      * @return  self
      */ 
-    public function setPersonname($personname)
+    public function setPersonName($personname)
     {
         $this->personname = $personname;
 

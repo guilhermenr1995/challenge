@@ -17,7 +17,10 @@ class Person_phone
      */
     private $phoneid;
 
-
+    /**
+     * @ORM\ManyToOne(targetEntity="Person", inversedBy="phones")
+     * @ORM\JoinColumn(name="personid", referencedColumnName="personid")
+     */
     private $personid;
 
     /**
@@ -38,7 +41,7 @@ class Person_phone
     /**
      * Get the value of phoneid
      */ 
-    public function getPhoneid()
+    public function getPhoneId()
     {
         return $this->phoneid;
     }
@@ -48,7 +51,7 @@ class Person_phone
      *
      * @return  self
      */ 
-    public function setPhoneid($phoneid)
+    public function setPhoneId($phoneid)
     {
         $this->phoneid = $phoneid;
 
@@ -58,7 +61,7 @@ class Person_phone
     /**
      * Get the value of personid
      */ 
-    public function getPersonid()
+    public function getPersonId()
     {
         return $this->personid;
     }
@@ -68,7 +71,7 @@ class Person_phone
      *
      * @return  self
      */ 
-    public function setPersonid($personid)
+    public function setPersonId($personid)
     {
         $this->personid = $personid;
 

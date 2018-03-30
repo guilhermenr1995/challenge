@@ -2,6 +2,12 @@
 // src/AppBundle/Entity/Shiporder.php
 namespace AppBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="shiporder")
+ */
 class Shiporder
 {
     /**
@@ -16,9 +22,11 @@ class Shiporder
      */
     private $orderid;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Person", inversedBy="shiporder")
+     * @ORM\JoinColumn(name="orderperson", referencedColumnName="personid")
+     */
     private $orderperson;
-
-    private $shipto;
 
     /**
      * @ORM\Column(type="datetime")
@@ -33,7 +41,7 @@ class Shiporder
     /**
      * Get the value of shiporderid
      */ 
-    public function getShiporderid()
+    public function getShiporderId()
     {
         return $this->shiporderid;
     }
@@ -43,7 +51,7 @@ class Shiporder
      *
      * @return  self
      */ 
-    public function setShiporderid($shiporderid)
+    public function setShiporderId($shiporderid)
     {
         $this->shiporderid = $shiporderid;
 
@@ -53,7 +61,7 @@ class Shiporder
     /**
      * Get the value of orderid
      */ 
-    public function getOrderid()
+    public function getOrderId()
     {
         return $this->orderid;
     }
@@ -63,7 +71,7 @@ class Shiporder
      *
      * @return  self
      */ 
-    public function setOrderid($orderid)
+    public function setOrderId($orderid)
     {
         $this->orderid = $orderid;
 
@@ -73,7 +81,7 @@ class Shiporder
     /**
      * Get the value of orderperson
      */ 
-    public function getOrderperson()
+    public function getOrderPerson()
     {
         return $this->orderperson;
     }
@@ -83,29 +91,9 @@ class Shiporder
      *
      * @return  self
      */ 
-    public function setOrderperson($orderperson)
+    public function setOrderPerson($orderperson)
     {
         $this->orderperson = $orderperson;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of shipto
-     */ 
-    public function getShipto()
-    {
-        return $this->shipto;
-    }
-
-    /**
-     * Set the value of shipto
-     *
-     * @return  self
-     */ 
-    public function setShipto($shipto)
-    {
-        $this->shipto = $shipto;
 
         return $this;
     }

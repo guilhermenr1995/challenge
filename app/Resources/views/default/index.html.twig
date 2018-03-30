@@ -5,11 +5,16 @@
         <div id="container">
             <div class="row">
                 <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+                    
+                    {% if type is defined %}
+                        <div class="alert alert-{{type}}">{{message}}</div>
+                    {% endif %}
+
                     <div class="well well-sm">
-                        <p> Por favor, selecione seus arquivos no campo abaixo, ou simplesmente arraste-os na área logo abaixo: </h2>
+                        <p> Por favor, selecione seus arquivos no campo abaixo, ou simplesmente arraste-os na área logo abaixo: </p>
                         <form action="/upload/files" method="post" enctype="multipart/form-data" id="upload-form">
                             <input type="file" name="files[]" id="upload-field" multiple />
-                            <button type="submit" class="btn btn-primary" id="upload-button">Enviar</button>
+                            <button type="submit" class="btn btn-primary" id="upload-button" data-loading-text="Importando...">Importar</button>
                         </form>
                     </div>
                 </div>

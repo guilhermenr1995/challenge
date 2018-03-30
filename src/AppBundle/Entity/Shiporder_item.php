@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="shiporder_items")
+ * @ORM\Table(name="shiporder_item")
  */
-class Shiporder_items
+class Shiporder_item
 {
     /**
      * @ORM\Column(type="integer")
@@ -17,7 +17,10 @@ class Shiporder_items
      */
     private $itemid;
 
-
+    /**
+     * @ORM\ManyToOne(targetEntity="Shiporder", inversedBy="shiporder_item")
+     * @ORM\JoinColumn(name="shiporderid", referencedColumnName="shiporderid")
+     */
     private $shiporderid;
 
     /**
@@ -53,7 +56,7 @@ class Shiporder_items
     /**
      * Get the value of itemid
      */ 
-    public function getItemid()
+    public function getItemId()
     {
         return $this->itemid;
     }
@@ -63,7 +66,7 @@ class Shiporder_items
      *
      * @return  self
      */ 
-    public function setItemid($itemid)
+    public function setItemId($itemid)
     {
         $this->itemid = $itemid;
 
@@ -73,7 +76,7 @@ class Shiporder_items
     /**
      * Get the value of shiporderid
      */ 
-    public function getShiporderid()
+    public function getShiporderId()
     {
         return $this->shiporderid;
     }
@@ -83,7 +86,7 @@ class Shiporder_items
      *
      * @return  self
      */ 
-    public function setShiporderid($shiporderid)
+    public function setShiporderId($shiporderid)
     {
         $this->shiporderid = $shiporderid;
 

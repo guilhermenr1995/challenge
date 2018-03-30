@@ -6,16 +6,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class PagesController extends Controller
+class ShiporderController extends Controller
 {
     /**
-     * @Route("/", name="homepage")
+     * @Route("/shiporder")
      */
-    public function index(Request $request)
+    public function all(Request $request)
     {
         return $this->render('default/index.html.twig', array(
             'type' => '',
             'message' => ''
         ));
+    }
+
+    public function getById($id)
+    {
+        
     }
 }
