@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -15,7 +16,23 @@ class Shiporder
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $shiporderid;
+    private $id;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Shiporder_item", mappedBy="shiporder")
+     */
+    private $items;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Shiporder_shipto", mappedBy="shiporder")
+     */
+    private $shipto;
+
+    public function __construct()
+    {
+        $this->items = new ArrayCollection();
+        $this->shipto = new ArrayCollection();
+    }
 
     /**
      * @ORM\Column(type="integer", length=11)
@@ -23,8 +40,8 @@ class Shiporder
     private $orderid;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Person", inversedBy="shiporder")
-     * @ORM\JoinColumn(name="orderperson", referencedColumnName="personid")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Person", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     private $orderperson;
 
@@ -39,25 +56,25 @@ class Shiporder
     private $updated;
 
     /**
-     * Get the value of shiporderid
+     * Get the value of id
      */ 
-    public function getShiporderId()
+    public function getId()
     {
-        return $this->shiporderid;
+        return $this->id;
     }
 
     /**
-     * Set the value of shiporderid
+     * Set the value of id
      *
      * @return  self
      */ 
-    public function setShiporderId($shiporderid)
+    public function setId($id)
     {
-        $this->shiporderid = $shiporderid;
+        $this->id = $id;
 
         return $this;
     }
-
+    
     /**
      * Get the value of orderid
      */ 

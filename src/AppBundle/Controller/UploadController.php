@@ -26,13 +26,21 @@ class UploadController extends Controller
 
         // Ordena os arquivos para people.xml ser lido primeiro
         $aux_files = array();
+        $invalid_files = array();
 
         for ($i = 0; $i < count($_FILES['files']['name']);  $i++)
         {
-            $aux_files[$_FILES['files']['name'][$i]] = [
-                'tmp_name' => $_FILES['files']['tmp_name'][$i],
-                'type' => $_FILES['files']['type'][$i]
-            ];
+            if ($_FILES['files']['type'][$i] !== 'text/xml' && $_FILES['files']['type'][$i] !== 'application/xml')
+            {
+                $invalid_files[] = $_FILES['files']['name'][$i];
+            }
+            else
+            {
+                $aux_files[$_FILES['files']['name'][$i]] = [
+                    'tmp_name' => $_FILES['files']['tmp_name'][$i],
+                    'type' => $_FILES['files']['type'][$i]
+                ];
+            }
         }
 
         ksort($aux_files);
@@ -44,10 +52,10 @@ class UploadController extends Controller
             $arr_files['type'][] = $value['type'];
         }
 
+        
+
         $uploadService = $this->container->get('app.upload_service');    
         $processedItems = $uploadService->upload($arr_files);
-        $people = array();
-        $shiporders = array(); 
 
         foreach ($processedItems as $items)
         {
@@ -59,9 +67,12 @@ class UploadController extends Controller
                         $date = new \DateTime(gmdate('Y-m-d H:i:s'));
 
                         $person = new Person();
-                        $person->setPersonId($item->personid);
+                        $person->setId($item->personid);
                         $person->setPersonName($item->personname);
                         $person->setCreated($date);
+                        $person->setUpdated($date);
+
+                        $entityManager = $this->getDoctrine()->getManager();
 
                         $personExists = $this->getDoctrine()
                             ->getRepository(Person::class)
@@ -71,12 +82,12 @@ class UploadController extends Controller
                         if ($personExists) 
                         {
                             $person->setCreated($personExists->getCreated());
+                            $entityManager->merge($person);
                         }
-
-                        $person->setUpdated($date);
-                        $entityManager = $this->getDoctrine()->getManager();
-                        $entityManager->merge($person);
-                        $entityManager->flush();
+                        else
+                        {
+                            $entityManager->persist($person);
+                        }
 
                         if (isset($item->phones) && isset($item->phones->phone) && count($item->phones->phone) > 0)
                         {
@@ -86,28 +97,28 @@ class UploadController extends Controller
                                 $phone = $phone[0];
 
                                 $person_phone = new Person_phone();
-                                $person_phone->setPersonId($person);
+                                $person_phone->setPerson($person);
                                 $person_phone->setPhone($phone);
                                 $person_phone->setCreated($date);
+                                $person_phone->setUpdated($date);
+                                
+                                $entityManager = $this->getDoctrine()->getManager();
 
                                 $phoneExists = $this->getDoctrine()
                                     ->getRepository(Person_phone::class)
-                                    ->findOneBy(array('phone' => $phone, 'personid' => $person));
-
-                                $l->info(print_r($phoneExists, TRUE));
-                                
-                                $person_phone->setUpdated($date);
-                                $entityManager = $this->getDoctrine()->getManager();
+                                    ->findOneBy(array('phone' => $phone));
                                 
                                 // Se o registro já existe, o merge não pode sobrescrever o "created"
                                 if ($phoneExists) 
                                 {
-                                    $person_phone->setPhoneId($phoneExists->getPhoneId());
+                                    $person_phone->setId(intval($phoneExists->getId()));
                                     $person_phone->setCreated($phoneExists->getCreated());
+                                    $entityManager->merge($person_phone);
                                 }
-
-                                $entityManager->merge($person_phone);
-                                $entityManager->flush();
+                                else 
+                                {
+                                    $entityManager->persist($person_phone);    
+                                }
                             }
                         }
 
@@ -118,40 +129,46 @@ class UploadController extends Controller
                         $date = new \DateTime(gmdate('Y-m-d H:i:s'));
 
                         $shiporder = new Shiporder();
-                        $shiporder->setOrderId(intval($item->orderid));
-                        $shiporder->setCreated($date);
 
                         $person = $this->getDoctrine()
-                            ->getRepository(Person::class)
-                            ->findOneBy(array('personid' => intval($item->orderperson)));
+                        ->getRepository(Person::class)
+                        ->findOneBy(array('id' => $item->orderperson));
 
                         $shiporder->setOrderPerson($person);
-
+                        $shiporder->setOrderId($item->orderid);
+                        $shiporder->setCreated($date);
+                        $shiporder->setUpdated($date);
+                        
+                        $entityManager = $this->getDoctrine()->getManager();
+                        
                         $shiporderExists = $this->getDoctrine()
-                            ->getRepository(Shiporder::class)
-                            ->findOneBy(array('orderid' => intval($item->orderid), 'orderperson' => $person));
+                        ->getRepository(Shiporder::class)
+                        ->findOneBy(array('orderid' => $item->orderid));
 
                         // Se o registro já existe, o merge não pode sobrescrever o "created"
                         if ($shiporderExists) 
                         {
-                            $shiporder->setShiporderId($shiporderExists->getShiporderId());                            
+                            $shiporder->setId(intval($shiporderExists->getId()));
                             $shiporder->setCreated($shiporderExists->getCreated());
+                            $entityManager->merge($shiporder);
                         }
-
-                        $shiporder->setUpdated($date);
-                        $entityManager = $this->getDoctrine()->getManager();
-                        $entityManager->merge($shiporder);
-                        $entityManager->flush();
-
+                        else 
+                        {
+                            $entityManager->persist($shiporder);
+                        }
+                        
                         if (isset($item->shipto))
                         {
                             $shiporder_shipto = new Shiporder_shipto();
                             $shiporder_shipto->setCreated($date);
-                            $shiporder_shipto->setShiporderId($shiporder);
+                            $shiporder_shipto->setUpdated($date);
+                            $shiporder_shipto->setShiporder($shiporder);
                             $shiporder_shipto->setName($item->shipto->name);
                             $shiporder_shipto->setAddress($item->shipto->address);
                             $shiporder_shipto->setCity($item->shipto->city);
                             $shiporder_shipto->setCountry($item->shipto->country);
+
+                            $entityManager = $this->getDoctrine()->getManager();
 
                             $shiporder_shiptoExists = $this->getDoctrine()
                                 ->getRepository(Shiporder_shipto::class)
@@ -165,14 +182,14 @@ class UploadController extends Controller
                             // Se o registro já existe, o merge não pode sobrescrever o "created"
                             if ($shiporder_shiptoExists) 
                             {
-                                $shiporder_shipto->setShiptoId($shiporder_shiptoExists->getShiptoId());                            
+                                $shiporder_shipto->setId(intval($shiporder_shiptoExists->getId()));
                                 $shiporder_shipto->setCreated($shiporder_shiptoExists->getCreated());
+                                $entityManager->merge($shiporder_shipto);
                             }
-
-                            $shiporder_shipto->setUpdated($date);
-                            $entityManager = $this->getDoctrine()->getManager();
-                            $entityManager->merge($shiporder_shipto);
-                            $entityManager->flush();
+                            else
+                            {
+                                $entityManager->persist($shiporder_shipto);
+                            }
                         }
 
                         if (isset($item->items))
@@ -181,11 +198,14 @@ class UploadController extends Controller
                             {
                                 $shiporder_item = new Shiporder_item();
                                 $shiporder_item->setCreated($date);
-                                $shiporder_item->setShiporderId($shiporder);
+                                $shiporder_item->setUpdated($date);
+                                $shiporder_item->setShiporder($shiporder);
                                 $shiporder_item->setTitle($item->item->title);
                                 $shiporder_item->setNote($item->item->note);
                                 $shiporder_item->setQuantity($item->item->quantity);
                                 $shiporder_item->setPrice($item->item->price);
+                                
+                                $entityManager = $this->getDoctrine()->getManager();
 
                                 $shiporder_itemExists = $this->getDoctrine()
                                     ->getRepository(Shiporder_item::class)
@@ -199,23 +219,32 @@ class UploadController extends Controller
                                 // Se o registro já existe, o merge não pode sobrescrever o "created"
                                 if ($shiporder_itemExists) 
                                 {
-                                    $shiporder_item->setItemId($shiporder_itemExists->getItemId());                            
+                                    $shiporder_item->setId(intval($shiporder_itemExists->getId()));
                                     $shiporder_item->setCreated($shiporder_itemExists->getCreated());
+                                    $entityManager->merge($shiporder_item);
                                 }
-
-                                $shiporder_item->setUpdated($date);
-                                $entityManager = $this->getDoctrine()->getManager();
-                                $entityManager->merge($shiporder_item);
-                                $entityManager->flush();
+                                else 
+                                {
+                                    $entityManager->persist($shiporder_item);    
+                                }
                             }
                         }
-
                         break;
 
                     default:
                         break;
                 }
+
+                $entityManager->flush();
             }
+        }
+
+        if (count($invalid_files) > 0)
+        {
+            return $this->render('default/index.html.twig', array(
+                'type' => 'warning',
+                'message' => 'Não foi possível importar os seguintes arquivos: ' . implode(', ', $invalid_files)
+            ));
         }
 
         return $this->render('default/index.html.twig', array(

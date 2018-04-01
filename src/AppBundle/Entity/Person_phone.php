@@ -15,13 +15,13 @@ class Person_phone
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $phoneid;
+    private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Person", inversedBy="phones")
-     * @ORM\JoinColumn(name="personid", referencedColumnName="personid")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Person", inversedBy="phones")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
-    private $personid;
+    private $person;
 
     /**
      * @ORM\Column(type="string", length=15)
@@ -39,41 +39,41 @@ class Person_phone
     private $updated;
 
     /**
-     * Get the value of phoneid
+     * Get the value of id
      */ 
-    public function getPhoneId()
+    public function getId()
     {
-        return $this->phoneid;
+        return $this->id;
     }
 
     /**
-     * Set the value of phoneid
+     * Set the value of id
      *
      * @return  self
      */ 
-    public function setPhoneId($phoneid)
+    public function setId($id)
     {
-        $this->phoneid = $phoneid;
+        $this->id = $id;
 
         return $this;
     }
 
     /**
-     * Get the value of personid
+     * Get the value of person
      */ 
-    public function getPersonId()
+    public function getPerson()
     {
-        return $this->personid;
+        return $this->person;
     }
 
     /**
-     * Set the value of personid
+     * Set the value of person
      *
      * @return  self
      */ 
-    public function setPersonId($personid)
+    public function setPerson($person)
     {
-        $this->personid = $personid;
+        $this->person = $person;
 
         return $this;
     }

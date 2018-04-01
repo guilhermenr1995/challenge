@@ -15,13 +15,13 @@ class Shiporder_item
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $itemid;
+    private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Shiporder", inversedBy="shiporder_item")
-     * @ORM\JoinColumn(name="shiporderid", referencedColumnName="shiporderid")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Shiporder", inversedBy="items", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
-    private $shiporderid;
+    private $shiporder;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -54,41 +54,41 @@ class Shiporder_item
     private $updated;
 
     /**
-     * Get the value of itemid
+     * Get the value of id
      */ 
-    public function getItemId()
+    public function getId()
     {
-        return $this->itemid;
+        return $this->id;
     }
 
     /**
-     * Set the value of itemid
+     * Set the value of id
      *
      * @return  self
      */ 
-    public function setItemId($itemid)
+    public function setId($id)
     {
-        $this->itemid = $itemid;
+        $this->id = $id;
 
         return $this;
     }
 
     /**
-     * Get the value of shiporderid
+     * Get the value of shiporder
      */ 
-    public function getShiporderId()
+    public function getShiporder()
     {
-        return $this->shiporderid;
+        return $this->shiporder;
     }
 
     /**
-     * Set the value of shiporderid
+     * Set the value of shiporder
      *
      * @return  self
      */ 
-    public function setShiporderId($shiporderid)
+    public function setShiporder($shiporder)
     {
-        $this->shiporderid = $shiporderid;
+        $this->shiporder = $shiporder;
 
         return $this;
     }

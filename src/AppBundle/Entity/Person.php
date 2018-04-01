@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -14,7 +15,17 @@ class Person
      * @ORM\Column(type="integer")
      * @ORM\Id
      */
-    private $personid;
+    private $id;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Person_phone", mappedBy="person")
+     */
+    private $phones;
+
+    public function __construct()
+    {
+        $this->phones = new ArrayCollection();
+    }
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -32,21 +43,21 @@ class Person
     private $updated;
 
     /**
-     * Get the value of personid
+     * Get the value of id
      */ 
-    public function getPersonId()
+    public function getId()
     {
-        return $this->personid;
+        return $this->id;
     }
 
     /**
-     * Set the value of personid
+     * Set the value of id
      *
      * @return  self
      */ 
-    public function setPersonId($personid)
+    public function setId($id)
     {
-        $this->personid = $personid;
+        $this->id = $id;
 
         return $this;
     }
