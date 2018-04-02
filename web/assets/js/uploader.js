@@ -29,7 +29,7 @@
         uploadField[0].files = e.originalEvent.dataTransfer.files;
 
         setTimeout(() => {
-            msgContainer.hide('fadeout', function () {
+            msgContainer.hide('slow', function () {
                 msgContainer.html("");
                 msgContainer.show();
             });
