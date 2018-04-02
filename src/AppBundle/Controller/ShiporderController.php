@@ -20,7 +20,7 @@ class ShiporderController extends FOSRestController
      *  resource=true
      * )
      * 
-     * @Route("/shiporder")
+     * @Route("/api/shiporder")
      * @Method({"GET"})
     */
     public function getAll()
@@ -28,6 +28,31 @@ class ShiporderController extends FOSRestController
         $data = $this->getDoctrine()
             ->getRepository(Shiporder::class)
             ->findAll();
+
+        $view = View::create();
+        $view->setData($data)->setStatusCode(200);
+
+        return $view;
+    }
+
+    /**
+     * Retorna as encomendas cadastradas na base de dados (pelo ID)
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  filters={
+     *      {"name"="id", "dataType"="integer"}
+     *  }
+     * )
+     * 
+     * @Route("/api/shiporder/{id}")
+     * @Method({"GET"})
+    */
+    public function getById($id)
+    {
+        $data = $this->getDoctrine()
+            ->getRepository(Shiporder::class)
+            ->find($id);
 
         $view = View::create();
         $view->setData($data)->setStatusCode(200);

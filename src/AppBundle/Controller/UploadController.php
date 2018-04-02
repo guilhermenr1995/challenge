@@ -22,8 +22,6 @@ class UploadController extends Controller
     */
     public function upload(Request $request)
     {   
-        $l = $this->get('logger');
-
         // Ordena os arquivos para people.xml ser lido primeiro
         $aux_files = array();
         $invalid_files = array();
@@ -51,8 +49,6 @@ class UploadController extends Controller
             $arr_files['tmp_name'][] = $value['tmp_name'];
             $arr_files['type'][] = $value['type'];
         }
-
-        
 
         $uploadService = $this->container->get('app.upload_service');    
         $processedItems = $uploadService->upload($arr_files);
@@ -243,7 +239,7 @@ class UploadController extends Controller
         {
             return $this->render('default/index.html.twig', array(
                 'type' => 'warning',
-                'message' => 'Não foi possível importar os seguintes arquivos: ' . implode(', ', $invalid_files)
+                'message' => 'Dados importados com sucesso, porém não foi possível importar os seguintes arquivos: ' . implode(', ', $invalid_files)
             ));
         }
 

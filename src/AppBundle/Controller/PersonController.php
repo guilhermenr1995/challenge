@@ -20,7 +20,7 @@ class PersonController extends FOSRestController
      *  resource=true
      * )
      * 
-     * @Route("/person")
+     * @Route("/api/person")
      * @Method({"GET"})
     */
     public function getAll()
@@ -45,7 +45,7 @@ class PersonController extends FOSRestController
      *  }
      * )
      * 
-     * @Route("/person/{id}")
+     * @Route("/api/person/{id}")
      * @Method({"GET"})
     */
     public function getById($id)
