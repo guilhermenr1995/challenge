@@ -9,11 +9,18 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Shiporder;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class ShiporderController extends FOSRestController
 {
     /**
-     * @Route("/api/shiporder")
+     * Retorna as encomendas cadastradas na base de dados
+     *
+     * @ApiDoc(
+     *  resource=true
+     * )
+     * 
+     * @Route("/shiporder")
      * @Method({"GET"})
     */
     public function getAll()

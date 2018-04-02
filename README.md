@@ -1,72 +1,34 @@
-Symfony Standard Edition
-========================
+## Challenge S2IT
 
-Welcome to the Symfony Standard Edition - a fully-functional Symfony
-application that you can use as the skeleton for your new applications.
+## Descrição
+Seu cliente recebe dois modelos XML de seu parceiro. Essa informação deve estar disponível tanto para o sistema Web quanto o App mobile.
 
-For details on how to download and get started with Symfony, see the
-[Installation][1] chapter of the Symfony Documentation.
+## Desafio
+Criar uma aplicação com Symfony2 para fazer upload manualmente dos XML's citados, e ter a opção de processá-los. Fazer com que a informação processada esteja disponível via API REST.
 
-What's inside?
---------------
 
-The Symfony Standard Edition is configured with the following defaults:
+## Instalação
 
-  * An AppBundle you can use to start coding;
+* Clone este repositório para o diretório desejado;
 
-  * Twig as the only configured template engine;
+Crie um arquivo `parameters.yml` com base no arquivo `app/config/parameters.yml.dist` e insira os parâmetros necessários para fazer a conexão com o banco de dados;
 
-  * Doctrine ORM/DBAL;
+    parameters:
+	    database_host: 127.0.0.1
+	    database_port: ~
+	    database_name: 'database_name'
+		database_user: 'database_user'
+	    database_password: 'database_password'
 
-  * Swiftmailer;
 
-  * Annotations enabled for everything.
+Após isso, acesse o diretório do projeto clonado em seu terminal, e digite os seguintes comandos:
 
-It comes pre-configured with the following bundles:
+    > composer update
+    > php app/console doctrine:database:create
+    > php app/console doctrine:schema:update --force
+   
+Agora, basta executar o comando para executar a aplicação:
 
-  * **FrameworkBundle** - The core Symfony framework bundle
-
-  * [**SensioFrameworkExtraBundle**][6] - Adds several enhancements, including
-    template and routing annotation capability
-
-  * [**DoctrineBundle**][7] - Adds support for the Doctrine ORM
-
-  * [**TwigBundle**][8] - Adds support for the Twig templating engine
-
-  * [**SecurityBundle**][9] - Adds security by integrating Symfony's security
-    component
-
-  * [**SwiftmailerBundle**][10] - Adds support for Swiftmailer, a library for
-    sending emails
-
-  * [**MonologBundle**][11] - Adds support for Monolog, a logging library
-
-  * [**AsseticBundle**][12] - Adds support for Assetic, an asset processing
-    library
-
-  * **WebProfilerBundle** (in dev/test env) - Adds profiling functionality and
-    the web debug toolbar
-
-  * **SensioDistributionBundle** (in dev/test env) - Adds functionality for
-    configuring and working with Symfony distributions
-
-  * [**SensioGeneratorBundle**][13] (in dev/test env) - Adds code generation
-    capabilities
-
-  * **DebugBundle** (in dev/test env) - Adds Debug and VarDumper component
-    integration
-
-All libraries and bundles included in the Symfony Standard Edition are
-released under the MIT or BSD license.
-
-Enjoy!
-
-[1]:  https://symfony.com/doc/2.7/setup.html
-[6]:  https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html
-[7]:  https://symfony.com/doc/2.7/doctrine.html
-[8]:  https://symfony.com/doc/2.7/templating.html
-[9]:  https://symfony.com/doc/2.7/security.html
-[10]: https://symfony.com/doc/2.7/email.html
-[11]: https://symfony.com/doc/2.7/logging.html
-[12]: https://symfony.com/doc/2.7/assetic/asset_management.html
-[13]: https://symfony.com/doc/current/bundles/SensioGeneratorBundle/index.html
+    > php app/console server:run
+    
+Com isso, a aplicação já estará disponível, inclusive a documentação da API no endereço `/api/doc`.
